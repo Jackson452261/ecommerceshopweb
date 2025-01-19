@@ -61,7 +61,7 @@ const NavLeft = ({ setIsOpen }) => {
       <NavLink to="/solutions" text="Solutions" />
       <NavLink to="/community" text="Community" />
       <NavLink to="/pricing" text="Pricing" />
-      <NavLink to="/company" text="Company" />
+      <NavLink to="/company" text="關於我" />
     </div>
   );
 };
