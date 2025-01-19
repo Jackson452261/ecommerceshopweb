@@ -57,7 +57,7 @@ const NavLeft = ({ setIsOpen }) => {
         <FiMenu />
       </motion.button>
       <Logo />
-      <NavLink to="/" text="Home" /> {/* 使用 Link 來導航到首頁 */}
+      <NavLink to="/" text="首頁" /> {/* 使用 Link 來導航到首頁 */}
       <NavLink to="/solutions" text="Solutions" />
       <NavLink to="/community" text="Community" />
       <NavLink to="/pricing" text="Pricing" />
