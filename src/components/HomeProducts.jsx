@@ -1,33 +1,50 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom"; // React Router 的 Link
+import { Pagination } from "antd"; // Ant Design 的 Pagination
 import { client } from "../../studio-react_shop/sanity"; // 確保這是你 sanity 客戶端的正確路徑
 
- 
-const getData = async () => {
-  const query = `*[_type == "product"][0...4] | order(_createdAt desc) {
-        _id,
-        price,
-        name,
-        "slug": slug.current,
-        "categoryName": category->name,
-        "imageUrl": images[0].asset->url
-    }`;
+// 分頁查詢函數
+const getPaginatedData = async (currentPage, pageSize) => {
+  const start = (currentPage - 1) * pageSize; // 起始索引
+  const end = start + pageSize; // 結束索引
 
-  const data = await client.fetch(query); // 從 Sanity 擷取資料
-  return data;
+  const query = `*[_type == "product"] | order(_createdAt desc) [${start}...${end}] {
+    _id,
+    price,
+    name,
+    "slug": slug.current,
+    "categoryName": category->name,
+    "imageUrl": images[0].asset->url
+  }`;
+
+  const totalQuery = `count(*[_type == "product"])`; // 獲取產品總數
+  const data = await client.fetch(query);
+  const total = await client.fetch(totalQuery);
+
+  return { data, total };
 };
 
 const HomeProduct = () => {
-  const [data, setData] = useState([]); // 使用 useState 來儲存資料
+  const [data, setData] = useState([]); // 當前頁面的數據
+  const [total, setTotal] = useState(0); // 總數據數量
+  const [currentPage, setCurrentPage] = useState(1); // 當前頁碼
+  const pageSize = 4; // 每頁顯示數量
 
+  // 每次頁碼變動時重新獲取數據
   useEffect(() => {
     const fetchData = async () => {
-      const result = await getData(); // 擷取資料
-      setData(result); // 將資料設置到 state
+      const result = await getPaginatedData(currentPage, pageSize);
+      setData(result.data);
+      setTotal(result.total);
     };
 
-    fetchData(); // 在組件掛載時執行資料擷取
-  }, []); // 空的依賴陣列表示只在組件首次掛載時執行
+    fetchData();
+  }, [currentPage]); // 當 currentPage 改變時觸發
+
+  // 處理分頁切換
+  const handlePageChange = (page) => {
+    setCurrentPage(page); // 更新當前頁碼
+  };
 
   return (
     <div className="bg-white">
@@ -37,7 +54,6 @@ const HomeProduct = () => {
             Adidas最新產品
           </h2>
         </div>
-
 
         <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
           {data.map((product) => (
@@ -71,6 +87,16 @@ const HomeProduct = () => {
           ))}
         </div>
       </div>
+
+      {/* 分頁元件 */}
+    <div className="flex justify-center">
+      <Pagination
+        current={currentPage} // 當前頁碼
+        pageSize={pageSize} // 每頁顯示數量
+        total={total} // 總數據數量
+        onChange={handlePageChange} // 頁碼變動時觸發
+        className="mt-8 text-center"/>
+    </div>
     </div>
   );
 };
