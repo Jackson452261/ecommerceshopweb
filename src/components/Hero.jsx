@@ -29,7 +29,7 @@ const Hero = () => {
             Adidas
           </h1>
           <p className="max-w-md leading-relaxed text-gray-500 xl:text-lg">
-             販售同步日本最新鞋款、服飾
+             販售同步日本最新鞋款、潮流服飾。
           </p>
         </div>
 
