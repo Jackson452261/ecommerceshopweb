@@ -62,6 +62,7 @@ const NavLeft = ({ setIsOpen }) => {
       <NavLink to="/community" text="Community" />
       <NavLink to="/pricing" text="Pricing" />
       <NavLink to="/company" text="關於我" />
+      
     </div>
   );
 };
@@ -85,6 +86,7 @@ const NavLink = ({ to, text }) => {
 const NavRight = () => {
   return (
     <div className="flex items-center gap-4">
+        <Link to="/login"> 
       <motion.button
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
@@ -92,6 +94,7 @@ const NavRight = () => {
       >
         登入
       </motion.button>
+      </Link>
       <motion.button
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
